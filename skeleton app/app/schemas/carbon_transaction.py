@@ -15,3 +15,10 @@ class CarbonTransactionResponse(CarbonTransactionBase):
     is_anomalous: bool
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class CarbonForecastResponse(BaseModel):
+    department_id: int
+    forecasted_carbon_amount: float
+    trend: str
+

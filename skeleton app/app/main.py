@@ -44,24 +44,9 @@ def root():
 #
 # 1. "GenAI Policy Summarizer" Router Integration:
 #    --------------------------------------------------------------------------
-#    Teammates working on the LLM policy summaries should:
-#    - Step A: Create the file `app/api/v1/policy_summarizer.py`
-#    - Step B: Create a service file `app/services/policy_service.py` to handle LLM calls
-#              (using google-genai, vertexai, or custom prompts).
-#    - Step C: Implement a router in `policy_summarizer.py`:
-#              ```python
-#              from fastapi import APIRouter, Depends
-#              from app.services.policy_service import summarize_pdf_policy
-#              router = APIRouter()
-#              @router.post("/summarize")
-#              def summarize(pdf_url: str):
-#                  return summarize_pdf_policy(pdf_url)
-#              ```
-#    - Step D: Include this new router in `app/api/v1/__init__.py`:
-#              ```python
-#              from app.api.v1.policy_summarizer import router as policy_router
-#              api_router.include_router(policy_router, prefix="/policies", tags=["GenAI Policy Summarizer"])
-#              ```
+#    COMPLETED: The GenAI Policy Summarizer has been successfully implemented
+#    in `app/api/v1/policies.py` and registered in `app/api/v1/__init__.py`.
+#    The endpoint is active at POST `/api/v1/policies/summarize`.
 #
 # 2. "Gamification/Social" Router Integration:
 #    --------------------------------------------------------------------------
@@ -77,4 +62,10 @@ def root():
 #              from app.api.v1.gamification import router as gamification_router
 #              api_router.include_router(gamification_router, prefix="/social", tags=["Gamification/Social"])
 #              ```
+#
+# 3. "AI ESG Insights Engine" Router Integration:
+#    --------------------------------------------------------------------------
+#    COMPLETED: The AI ESG Insights Engine has been successfully implemented
+#    in `app/api/v1/insights.py` and registered in `app/api/v1/__init__.py`.
+#    The endpoint is active at POST `/api/v1/insights/generate`.
 # ==============================================================================
