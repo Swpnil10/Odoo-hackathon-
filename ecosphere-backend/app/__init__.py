@@ -1,1 +1,0 @@
-# EcoSphere App package

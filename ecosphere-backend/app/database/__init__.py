@@ -1,1 +1,0 @@
-# EcoSphere Database package

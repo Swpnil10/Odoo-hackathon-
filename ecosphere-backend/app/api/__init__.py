@@ -1,1 +1,0 @@
-# EcoSphere API package
