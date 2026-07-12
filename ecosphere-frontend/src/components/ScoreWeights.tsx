@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BarChart, 
   Bar, 
@@ -24,11 +24,15 @@ import {
   Sparkles,
   Leaf,
   HeartHandshake,
-  ShieldCheck
+  ShieldCheck,
+  Loader2
 } from 'lucide-react';
 import type { DepartmentScore, ESGWeightConfig } from '../types';
 import GlassCard from './GlassCard';
 import { calculateWeightedScores, calculateOverallESGScore } from '../utils/esgMath';
+import { api } from '../utils/api';
+import { AIPolicySummaryCard } from './AIPolicySummaryCard';
+import { ESGInsightsCard } from './ESGInsightsCard';
 
 interface ScoreWeightsProps {
   departments: DepartmentScore[];
@@ -41,6 +45,36 @@ export const ScoreWeights: React.FC<ScoreWeightsProps> = ({ departments }) => {
     social: 30,
     governance: 30
   });
+
+  const [selectedDept, setSelectedDept] = useState<DepartmentScore | null>(null);
+  const [forecast, setForecast] = useState<{ forecasted_carbon_amount: number; trend: string } | null>(null);
+  const [loadingForecast, setLoadingForecast] = useState<boolean>(false);
+  const [forecastError, setForecastError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!selectedDept) {
+      setForecast(null);
+      return;
+    }
+
+    const fetchForecast = async () => {
+      setLoadingForecast(true);
+      setForecastError(null);
+      try {
+        const data = await api.getCarbonForecast(parseInt(selectedDept.id));
+        setForecast({
+          forecasted_carbon_amount: data.forecasted_carbon_amount,
+          trend: data.trend
+        });
+      } catch (err: any) {
+        setForecastError(err.message || 'Failed to fetch carbon emissions forecast.');
+      } finally {
+        setLoadingForecast(false);
+      }
+    };
+
+    fetchForecast();
+  }, [selectedDept]);
 
   const [isLocked, setIsLocked] = useState(true);
   const [weightByEmployees, setWeightByEmployees] = useState(false);
@@ -307,20 +341,20 @@ export const ScoreWeights: React.FC<ScoreWeightsProps> = ({ departments }) => {
             <div className="w-full h-[320px] text-xs">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
                   <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} />
                   <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} domain={[0, 100]} />
                   <Tooltip 
                     contentStyle={{
-                      backgroundColor: 'rgba(11, 15, 30, 0.85)',
-                      borderColor: 'rgba(255, 255, 255, 0.1)',
+                      backgroundColor: '#0f172a',
+                      borderColor: '#1e293b',
                       borderRadius: '8px',
-                      color: '#fff'
+                      color: '#f1f5f9'
                     }}
                   />
                   <Legend verticalAlign="top" height={36} iconType="circle" />
                   <Bar dataKey="Environmental" fill="#10b981" radius={[4, 4, 0, 0]} opacity={0.8} />
-                  <Bar dataKey="Social" fill="#8b5cf6" radius={[4, 4, 0, 0]} opacity={0.8} />
+                  <Bar dataKey="Social" fill="#6366f1" radius={[4, 4, 0, 0]} opacity={0.8} />
                   <Bar dataKey="Governance" fill="#f59e0b" radius={[4, 4, 0, 0]} opacity={0.8} />
                   <Bar dataKey="Weighted Total" fill="#ffffff" radius={[4, 4, 0, 0]} opacity={0.9} barSize={8} />
                 </BarChart>
@@ -329,27 +363,33 @@ export const ScoreWeights: React.FC<ScoreWeightsProps> = ({ departments }) => {
           </div>
 
           {/* Bottom Table Summary */}
-          <div className="overflow-x-auto mt-6 border-t border-white/5 pt-4">
-            <table className="w-full text-[11px] text-left text-brand-textMuted">
+          <div className="overflow-x-auto mt-6 border-t border-slate-800 pt-4">
+            <table className="w-full text-[11px] text-left text-slate-400">
               <thead>
-                <tr className="text-white border-b border-white/5 pb-2">
+                <tr className="text-slate-100 border-b border-slate-800 pb-2">
                   <th className="pb-2 font-bold">Department</th>
                   <th className="pb-2 font-bold text-center">Employees</th>
                   <th className="pb-2 font-bold text-center text-emerald-400">E-Score</th>
-                  <th className="pb-2 font-bold text-center text-violet-400">S-Score</th>
+                  <th className="pb-2 font-bold text-center text-indigo-400">S-Score</th>
                   <th className="pb-2 font-bold text-center text-amber-400">G-Score</th>
-                  <th className="pb-2 font-bold text-right text-white">Weighted Index</th>
+                  <th className="pb-2 font-bold text-right text-slate-100">Weighted Index</th>
                 </tr>
               </thead>
               <tbody>
                 {calculatedDepts.map((d) => (
-                  <tr key={d.id} className="border-b border-white/[0.02] hover:bg-white/[0.01]">
-                    <td className="py-2.5 font-semibold text-white">{d.name}</td>
+                  <tr 
+                    key={d.id} 
+                    className={`border-b border-slate-800/40 hover:bg-slate-800/40 cursor-pointer transition-all ${
+                      selectedDept?.id === d.id ? 'bg-slate-800 border-l-2 border-emerald-400 pl-2' : ''
+                    }`}
+                    onClick={() => setSelectedDept(d)}
+                  >
+                    <td className="py-2.5 font-semibold text-slate-100">{d.name}</td>
                     <td className="py-2.5 text-center">{d.employeeCount}</td>
                     <td className="py-2.5 text-center text-emerald-400/90 font-medium">{d.environmental}</td>
-                    <td className="py-2.5 text-center text-violet-400/90 font-medium">{d.social}</td>
+                    <td className="py-2.5 text-center text-indigo-400/90 font-medium">{d.social}</td>
                     <td className="py-2.5 text-center text-amber-400/90 font-medium">{d.governance}</td>
-                    <td className="py-2.5 text-right font-bold text-white">{d.weightedTotal}</td>
+                    <td className="py-2.5 text-right font-bold text-slate-100">{d.weightedTotal}</td>
                   </tr>
                 ))}
               </tbody>
@@ -431,6 +471,57 @@ export const ScoreWeights: React.FC<ScoreWeightsProps> = ({ departments }) => {
         </GlassCard>
 
       </div>
+
+      {/* Selected Department Details (AI ESG Insights & Policy Summarizer) */}
+      {selectedDept && (
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8 pt-8 border-t border-brand-border">
+          <div className="xl:col-span-2">
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-amber-400" />
+                  AI Sustainability Analyst Panel: {selectedDept.name}
+                </h3>
+                <p className="text-xs text-brand-textMuted mt-0.5">
+                  Live predictive model and executive recommendation agents powered by EcoSphere GenAI
+                </p>
+              </div>
+              <button 
+                onClick={() => setSelectedDept(null)}
+                className="text-xs font-bold text-slate-400 hover:text-white border border-white/5 px-3 py-1.5 rounded-xl hover:bg-white/5 cursor-pointer"
+              >
+                Close Panel
+              </button>
+            </div>
+          </div>
+
+          {/* ESG Insights Card */}
+          <div className="space-y-6">
+            {loadingForecast ? (
+              <div className="glass-panel p-8 rounded-2xl border border-white/5 bg-white/[0.01] flex items-center justify-center min-h-[300px]">
+                <Loader2 className="animate-spin h-6 w-6 text-blue-400" />
+                <span className="text-xs text-slate-400 font-medium ml-3">Calculating carbon emissions forecast...</span>
+              </div>
+            ) : forecastError ? (
+              <div className="glass-panel p-6 rounded-2xl border border-rose-500/20 bg-rose-500/5 text-rose-400 text-xs">
+                {forecastError}
+              </div>
+            ) : forecast ? (
+              <ESGInsightsCard 
+                department={selectedDept} 
+                forecastedCarbon={forecast.forecasted_carbon_amount}
+                carbonTrend={forecast.trend}
+              />
+            ) : null}
+          </div>
+
+          {/* Policy Summarizer Card */}
+          <div>
+            <AIPolicySummaryCard />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

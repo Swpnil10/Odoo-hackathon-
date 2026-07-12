@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Info, 
-  Plus, 
-  RotateCcw,
-  Compass
+  Compass,
+  Sun,
+  Moon,
+  CloudRain,
+  Sparkles
 } from 'lucide-react';
 import GlassCard from './GlassCard';
 
 interface TerrariumProps {
   xp: number;
-  onXpChange?: (newXp: number) => void;
 }
 
 interface TerrariumPropDetail {
@@ -21,8 +22,10 @@ interface TerrariumPropDetail {
   category: 'Environmental' | 'Social' | 'Governance';
 }
 
-export const Terrarium: React.FC<TerrariumProps> = ({ xp, onXpChange }) => {
+export const Terrarium: React.FC<TerrariumProps> = ({ xp }) => {
   const [selectedProp, setSelectedProp] = useState<TerrariumPropDetail | null>(null);
+  const [isNight, setIsNight] = useState<boolean>(false);
+  const [weather, setWeather] = useState<'clear' | 'rain' | 'pollen'>('clear');
 
   // Determine current stage based on XP
   // Stage 1: Seedling (0 - 100 XP)
@@ -129,38 +132,54 @@ export const Terrarium: React.FC<TerrariumProps> = ({ xp, onXpChange }) => {
               {stageDesc}
             </p>
           </div>
-          {onXpChange && (
-            <div className="flex gap-2 bg-white/5 p-1 rounded-lg border border-white/10">
-              <button 
-                onClick={() => onXpChange(xp + 50)} 
-                title="Earn +50 XP"
-                className="p-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/20 hover:scale-105 transition-all"
-              >
-                <Plus className="w-3.5 h-3.5" />
-              </button>
-              <button 
-                onClick={() => onXpChange(Math.max(0, xp - 50))} 
-                title="Subtract -50 XP"
-                className="p-1.5 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/20 hover:scale-105 transition-all"
-              >
-                <span className="text-xs font-bold leading-none">-50</span>
-              </button>
-              <button 
-                onClick={() => onXpChange(150)} 
-                title="Reset to Stage 2 (150 XP)"
-                className="p-1.5 rounded bg-slate-700/40 hover:bg-slate-700/60 text-slate-300 border border-white/5 hover:scale-105 transition-all"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-              </button>
+        </div>
+
+        {/* Weather & Time Controls */}
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4 p-3 bg-slate-950/60 border border-slate-800 rounded-xl text-xs select-none">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Time:</span>
+            <button
+              onClick={() => setIsNight(!isNight)}
+              className={`px-3 py-1.5 rounded-xl font-extrabold transition-all flex items-center gap-1.5 cursor-pointer border ${
+                isNight 
+                  ? 'bg-indigo-600/20 border-indigo-500/30 text-indigo-300 shadow-md shadow-indigo-500/5' 
+                  : 'bg-amber-500/10 border border-amber-500/20 text-amber-400 hover:bg-amber-500/15'
+              }`}
+            >
+              {isNight ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
+              {isNight ? 'Night' : 'Day'}
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Weather:</span>
+            <div className="flex bg-slate-950 border border-slate-800 rounded-xl p-0.5">
+              {(['clear', 'rain', 'pollen'] as const).map((w) => (
+                <button
+                  key={w}
+                  onClick={() => setWeather(w)}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold capitalize transition-all cursor-pointer flex items-center gap-1 ${
+                    weather === w
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow'
+                      : 'text-slate-400 hover:text-slate-200 border border-transparent'
+                  }`}
+                >
+                  {w === 'rain' && <CloudRain className="w-3 h-3" />}
+                  {w === 'pollen' && <Sparkles className="w-3.5 h-3.5" />}
+                  {w}
+                </button>
+              ))}
             </div>
-          )}
+          </div>
         </div>
 
         {/* The SVG Terrarium Container */}
-        <div className="relative w-full h-[290px] flex items-center justify-center bg-slate-950/40 rounded-2xl border border-white/5 overflow-hidden">
+        <div className="relative w-full h-[290px] flex items-center justify-center bg-slate-950/40 rounded-2xl border border-slate-800 overflow-hidden">
           
           {/* Neon backglow light behind the terrarium */}
-          <div className="absolute w-44 h-44 rounded-full bg-emerald-500/10 blur-3xl -z-10 animate-pulse-slow" />
+          <div className={`absolute w-44 h-44 rounded-full blur-3xl -z-10 animate-pulse-slow transition-all duration-1000 ${
+            isNight ? 'bg-indigo-500/15' : 'bg-emerald-500/10'
+          }`} />
           
           <svg viewBox="0 0 320 380" className="w-full h-full max-h-[280px]">
             {/* Definitions for Gradients */}
@@ -168,7 +187,7 @@ export const Terrarium: React.FC<TerrariumProps> = ({ xp, onXpChange }) => {
               <linearGradient id="domeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="rgba(255, 255, 255, 0.15)" />
                 <stop offset="40%" stopColor="rgba(255, 255, 255, 0.02)" />
-                <stop offset="100%" stopColor="rgba(16, 185, 129, 0.05)" />
+                <stop offset="100%" stopColor={isNight ? "rgba(99, 102, 241, 0.08)" : "rgba(16, 185, 129, 0.05)"} />
               </linearGradient>
               <linearGradient id="soilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stopColor="#452c20" />
@@ -269,11 +288,22 @@ export const Terrarium: React.FC<TerrariumProps> = ({ xp, onXpChange }) => {
                   <circle cx="162" cy="210" r="15" fill="#059669" opacity="0.9" />
                 </g>
 
-                {/* Sun Glow */}
-                <g className="cursor-pointer" onClick={() => handlePropClick('sun')}>
-                  <circle cx="230" cy="90" r="16" fill="rgba(245, 158, 11, 0.2)" className="animate-pulse-slow" />
-                  <circle cx="230" cy="90" r="10" fill="#f59e0b" />
-                </g>
+                {/* Sun or Moon Glow */}
+                {isNight ? (
+                  <g className="cursor-pointer" onClick={() => handlePropClick('sun')}>
+                    <circle cx="230" cy="90" r="16" fill="rgba(129, 140, 248, 0.25)" className="animate-pulse-slow" />
+                    <mask id="moonMask">
+                      <circle cx="230" cy="90" r="10" fill="white" />
+                      <circle cx="224" cy="84" r="10" fill="black" />
+                    </mask>
+                    <circle cx="230" cy="90" r="10" fill="#e2e8f0" mask="url(#moonMask)" />
+                  </g>
+                ) : (
+                  <g className="cursor-pointer" onClick={() => handlePropClick('sun')}>
+                    <circle cx="230" cy="90" r="16" fill="rgba(245, 158, 11, 0.2)" className="animate-pulse-slow" />
+                    <circle cx="230" cy="90" r="10" fill="#f59e0b" />
+                  </g>
+                )}
               </>
             )}
 
@@ -373,6 +403,46 @@ export const Terrarium: React.FC<TerrariumProps> = ({ xp, onXpChange }) => {
                 <circle cx="72" cy="150" r="3.5" fill="#059669" opacity="0.8" />
                 <circle cx="69" cy="115" r="3.5" fill="#10b981" opacity="0.8" />
               </>
+            )}
+
+            {/* Dynamic Weather & Time Elements */}
+            
+            {/* 1. Fireflies (Only in Night mode) */}
+            {isNight && (
+              <g>
+                <circle cx="100" cy="180" r="2" fill="#34d399" className="animate-firefly-1 text-glow-env" />
+                <circle cx="130" cy="140" r="1.5" fill="#a7f3d0" className="animate-firefly-2 text-glow-env" />
+                <circle cx="190" cy="170" r="2.5" fill="#10b981" className="animate-firefly-3 text-glow-env" />
+                <circle cx="220" cy="210" r="1.5" fill="#6ee7b7" className="animate-firefly-4 text-glow-env" />
+                <circle cx="150" cy="225" r="2" fill="#34d399" className="animate-firefly-2 text-glow-env" />
+              </g>
+            )}
+
+            {/* 2. Rain drops (animated blue lines) */}
+            {weather === 'rain' && (
+              <g opacity="0.6">
+                <line x1="90" y1="120" x2="88" y2="135" stroke="#38bdf8" strokeWidth="1" className="animate-rain-1" />
+                <line x1="120" y1="100" x2="118" y2="115" stroke="#0ea5e9" strokeWidth="1" className="animate-rain-2" />
+                <line x1="160" y1="110" x2="158" y2="125" stroke="#38bdf8" strokeWidth="1.2" className="animate-rain-3" />
+                <line x1="200" y1="95" x2="198" y2="110" stroke="#0ea5e9" strokeWidth="1" className="animate-rain-4" />
+                <line x1="230" y1="130" x2="228" y2="145" stroke="#38bdf8" strokeWidth="1.5" className="animate-rain-5" />
+                <line x1="140" y1="140" x2="138" y2="155" stroke="#0ea5e9" strokeWidth="1.2" className="animate-rain-6" />
+                <line x1="105" y1="150" x2="103" y2="165" stroke="#38bdf8" strokeWidth="1" className="animate-rain-4" />
+                <line x1="175" y1="160" x2="173" y2="175" stroke="#0ea5e9" strokeWidth="1.2" className="animate-rain-2" />
+              </g>
+            )}
+
+            {/* 3. Pollen grains (animated drifting gold circles) */}
+            {weather === 'pollen' && (
+              <g opacity="0.75">
+                <circle cx="100" cy="160" r="2.5" fill="#fbbf24" className="animate-pollen-1 text-glow-gov" />
+                <circle cx="130" cy="200" r="1.8" fill="#fbbf24" className="animate-pollen-2 text-glow-gov" />
+                <circle cx="170" cy="130" r="2.2" fill="#fbbf24" className="animate-pollen-3 text-glow-gov" />
+                <circle cx="210" cy="180" r="3" fill="#f59e0b" className="animate-pollen-4 text-glow-gov" />
+                <circle cx="150" cy="150" r="2" fill="#fbbf24" className="animate-pollen-5 text-glow-gov" />
+                <circle cx="120" cy="230" r="1.5" fill="#f59e0b" className="animate-pollen-2 text-glow-gov" />
+                <circle cx="190" cy="210" r="2" fill="#fbbf24" className="animate-pollen-4 text-glow-gov" />
+              </g>
             )}
 
             {/* Glowing Particles (Floating up, active based on level) */}

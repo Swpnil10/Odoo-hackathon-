@@ -1,4 +1,4 @@
-import type { Challenge, DepartmentScore, Reward, Badge, UserProfile } from '../types';
+import type { Challenge, Reward, Badge, UserProfile } from '../types';
 
 // NOTE FOR BACKEND DEVELOPERS:
 // This file acts as the mock data layer. To integrate with a real backend API:
@@ -125,13 +125,6 @@ export const mockChallenges: Challenge[] = [
   }
 ];
 
-export const mockDepartmentScores: DepartmentScore[] = [
-  { id: 'dept-1', name: 'Engineering', environmental: 84, social: 76, governance: 90, employeeCount: 120 },
-  { id: 'dept-2', name: 'Sales & Marketing', environmental: 62, social: 88, governance: 72, employeeCount: 85 },
-  { id: 'dept-3', name: 'Operations', environmental: 78, social: 65, governance: 82, employeeCount: 50 },
-  { id: 'dept-4', name: 'Human Resources', environmental: 70, social: 92, governance: 88, employeeCount: 30 },
-  { id: 'dept-5', name: 'Finance & Legal', environmental: 55, social: 72, governance: 96, employeeCount: 25 }
-];
 
 export const mockRewards: Reward[] = [
   {

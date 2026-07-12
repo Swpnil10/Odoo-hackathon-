@@ -1,5 +1,8 @@
-from pydantic_settings import BaseSettings
-from pydantic import ConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
@@ -11,6 +14,22 @@ class Settings(BaseSettings):
     # ML settings
     MIN_TRAINING_SAMPLES: int = 5
     
-    model_config = ConfigDict(case_sensitive=True, env_file=".env")
+    # JWT security settings
+    SECRET_KEY: str = "SUPER_SECRET_ESG_KEY_ODOO_HACKATHON"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
+    
+    # SMTP settings must be declared BEFORE model_config
+    SMTP_SERVER: str | None = None
+    SMTP_PORT: int | None = 587
+    SMTP_USERNAME: str | None = None
+    SMTP_PASSWORD: str | None = None
+
+    # Use SettingsConfigDict for BaseSettings in Pydantic V2
+    model_config = SettingsConfigDict(
+        case_sensitive=True, 
+        env_file=".env",
+        extra="ignore"
+    )
 
 settings = Settings()

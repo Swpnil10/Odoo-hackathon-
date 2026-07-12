@@ -1,18 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   font-family: 'Outfit', sans-serif;
   color-scheme: dark;
 }
 
+html, body, #root {
+  font-family: 'Outfit', sans-serif !important;
+}
+
 body {
   margin: 0;
-  background-color: #05070f;
-  color: #f8fafc;
+  background-color: #020617; /* bg-slate-950 */
+  color: #f1f5f9; /* text-slate-100 */
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -20,19 +22,18 @@ body {
 
 /* Glassmorphism custom classes */
 .glass-panel {
-  background: rgba(11, 15, 30, 0.5);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #0f172a; /* bg-slate-900 */
+  border: 1px solid #1e293b; /* border-slate-800 */
+  border-radius: 0.75rem; /* rounded-xl */
 }
 
 .glass-panel-hover {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .glass-panel-hover:hover {
-  background: rgba(20, 28, 54, 0.6);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  background: #1e293b; /* bg-slate-800 */
+  border-color: #334155; /* border-slate-700 */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
   transform: translateY(-2px);
 }
 

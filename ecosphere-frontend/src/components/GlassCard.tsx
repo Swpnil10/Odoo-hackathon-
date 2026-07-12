@@ -17,10 +17,10 @@ export const GlassCard: React.FC<GlassCardProps> = ({
   onClick,
 }) => {
   const glowClasses = {
-    env: 'hover:shadow-[0_0_30px_rgba(16,185,129,0.18)] hover:border-env-primary/40',
-    social: 'hover:shadow-[0_0_30px_rgba(139,92,246,0.18)] hover:border-social-primary/40',
-    gov: 'hover:shadow-[0_0_30px_rgba(245,158,11,0.18)] hover:border-gov-primary/40',
-    default: 'hover:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] hover:border-white/15',
+    env: 'hover:shadow-[0_0_30px_rgba(16,185,129,0.18)] hover:border-emerald-500/40',
+    social: 'hover:shadow-[0_0_30px_rgba(99,102,241,0.18)] hover:border-indigo-500/40',
+    gov: 'hover:shadow-[0_0_30px_rgba(245,158,11,0.18)] hover:border-amber-500/40',
+    default: 'hover:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] hover:border-slate-700',
   };
 
   const cardContent = (

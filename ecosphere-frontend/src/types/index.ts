@@ -61,6 +61,7 @@ export interface UserProfile {
   points: number;
   level: number;
   badges: string[]; // Badge IDs
+  email?: string;
 }
 
 export interface ESGWeightConfig {

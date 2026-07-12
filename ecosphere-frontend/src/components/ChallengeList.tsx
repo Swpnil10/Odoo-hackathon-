@@ -148,10 +148,10 @@ export const ChallengeList: React.FC<ChallengeListProps> = ({
             <button
               key={status}
               onClick={() => setActiveFilter(status)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-300 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-300 cursor-pointer ${
                 activeFilter === status
-                  ? 'bg-emerald-500/20 border border-emerald-500/35 text-emerald-400'
-                  : 'bg-white/5 border border-white/5 text-brand-textMuted hover:text-white hover:bg-white/10'
+                  ? 'bg-slate-800 border border-slate-700 text-slate-100 shadow'
+                  : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-100 hover:bg-slate-800/50'
               }`}
             >
               {status}
@@ -161,13 +161,13 @@ export const ChallengeList: React.FC<ChallengeListProps> = ({
 
         {/* Search Input bar */}
         <div className="relative md:w-72">
-          <Search className="absolute left-3 top-2.5 w-4 h-4 text-brand-textMuted" />
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
           <input
             type="text"
             placeholder="Search challenges..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-slate-900/60 border border-white/5 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-brand-textMuted focus:outline-none focus:border-white/15 focus:ring-1 focus:ring-white/10 transition-all duration-300"
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500/50 transition-all duration-300 font-sans"
           />
         </div>
       </div>
@@ -213,8 +213,10 @@ export const ChallengeList: React.FC<ChallengeListProps> = ({
                         <div className="mt-2.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-start gap-2.5">
                           <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
                           <div>
-                            <span className="text-[10px] font-bold text-rose-300 block uppercase tracking-wider">Rejection Reason</span>
-                            <p className="text-[11px] text-rose-200/80 mt-0.5 leading-relaxed">{challenge.rejectionNote}</p>
+                            <span className="text-[10px] font-bold text-rose-300 block uppercase tracking-wider">Rejection Alert</span>
+                            <p className="text-[11px] text-rose-200/80 mt-0.5 leading-relaxed">
+                              HR Audit rejection: {challenge.rejectionNote || 'Please attach clear proof'}
+                            </p>
                           </div>
                         </div>
                       )}
@@ -289,10 +291,10 @@ export const ChallengeList: React.FC<ChallengeListProps> = ({
           </AnimatePresence>
         </div>
       ) : (
-        <div className="glass-panel rounded-2xl p-12 text-center border border-white/5 flex flex-col items-center justify-center">
-          <AlertCircle className="w-8 h-8 text-slate-500 mb-3" />
-          <h4 className="text-sm font-semibold text-white">No challenges found</h4>
-          <p className="text-xs text-brand-textMuted mt-1 max-w-sm">
+        <div className="text-center py-12 border border-dashed border-slate-800 rounded-2xl bg-slate-950/20">
+          <AlertCircle className="w-8 h-8 text-slate-500 mb-3 mx-auto" />
+          <h4 className="text-sm font-semibold text-slate-100">No challenges found</h4>
+          <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
             There are no challenges under the "{activeFilter}" state. Try choosing another filter or searching a different term.
           </p>
         </div>
@@ -307,20 +309,20 @@ export const ChallengeList: React.FC<ChallengeListProps> = ({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-              className="glass-panel w-full max-w-md rounded-2xl border border-white/10 p-6 shadow-2xl bg-[#090d16]/95"
+              className="w-full max-w-md rounded-2xl border border-slate-800 p-6 shadow-2xl bg-slate-900 flex flex-col space-y-4"
             >
-              <div className="flex justify-between items-start mb-4">
+              <div className="flex justify-between items-start mb-2">
                 <div>
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
                     Verify Challenge
                   </h3>
-                  <p className="text-xs text-brand-textMuted mt-0.5">
+                  <p className="text-xs text-slate-400 mt-0.5">
                     Submit audit compliance proof for "{submittingProofFor.title}"
                   </p>
                 </div>
                 <button
                   onClick={() => setSubmittingProofFor(null)}
-                  className="text-slate-500 hover:text-white transition-colors"
+                  className="text-slate-500 hover:text-white transition-colors cursor-pointer text-lg font-bold"
                 >
                   &times;
                 </button>
@@ -338,7 +340,7 @@ export const ChallengeList: React.FC<ChallengeListProps> = ({
                     value={proofText}
                     onChange={(e) => setProofText(e.target.value)}
                     placeholder="Describe how you completed this challenge (e.g., 'Volunteered for 3 hours helping package food boxes...')"
-                    className="w-full bg-slate-900 border border-white/5 rounded-xl px-3 py-2.5 text-xs text-white placeholder-brand-textMuted focus:outline-none focus:border-white/15 focus:ring-1 focus:ring-white/10 transition-all"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500/50 transition-all font-sans"
                   />
                 </div>
 
@@ -360,7 +362,7 @@ export const ChallengeList: React.FC<ChallengeListProps> = ({
                       <button
                         type="button"
                         onClick={() => setAttachedFile(null)}
-                        className="text-slate-400 hover:text-white text-xs font-bold px-2 py-1 bg-white/5 rounded border border-white/10"
+                        className="text-slate-400 hover:text-white text-xs font-bold px-2 py-1 bg-slate-800 rounded border border-slate-700 cursor-pointer"
                       >
                         Remove
                       </button>
@@ -368,7 +370,7 @@ export const ChallengeList: React.FC<ChallengeListProps> = ({
                   ) : (
                     <div
                       onClick={triggerUploadMock}
-                      className="border border-dashed border-white/10 hover:border-white/20 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors group bg-white/[0.01]"
+                      className="border border-dashed border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors group bg-slate-950/20"
                     >
                       {isUploading ? (
                         <div className="flex flex-col items-center">
@@ -377,7 +379,7 @@ export const ChallengeList: React.FC<ChallengeListProps> = ({
                         </div>
                       ) : (
                         <>
-                          <Upload className="w-6 h-6 text-slate-500 group-hover:text-emerald-400 transition-colors mb-2" />
+                          <Upload className="w-6 h-6 text-slate-500 group-hover:text-indigo-400 transition-colors mb-2" />
                           <span className="text-xs font-semibold text-slate-300">Upload verification file</span>
                           <span className="text-[10px] text-slate-500 mt-1">Drag and drop, or tap to browse</span>
                         </>
@@ -391,13 +393,13 @@ export const ChallengeList: React.FC<ChallengeListProps> = ({
                   <button
                     type="button"
                     onClick={() => setSubmittingProofFor(null)}
-                    className="bg-white/5 border border-white/10 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-white/10 active:scale-95 transition-all"
+                    className="bg-slate-800 border border-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold hover:bg-slate-700 active:scale-95 transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="bg-gradient-to-r from-emerald-500 to-teal-500 text-brand-bg px-4 py-2 rounded-xl text-xs font-bold hover:scale-105 active:scale-95 transition-all shadow-md shadow-emerald-500/10"
+                    className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold hover:scale-105 active:scale-95 transition-all shadow-md cursor-pointer"
                   >
                     Submit Proof Request
                   </button>

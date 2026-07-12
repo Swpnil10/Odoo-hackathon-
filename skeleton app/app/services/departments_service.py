@@ -25,10 +25,15 @@ def create_department(db: Session, department_in: DepartmentCreate) -> Departmen
     """
     Create a new department in the database.
     """
+    total = round((department_in.environmental_score + department_in.social_score + department_in.governance_score) / 3.0, 2)
     db_obj = Department(
         name=department_in.name,
         code=department_in.code,
-        total_esg_score=100.0  # Set initial standard base ESG score
+        environmental_score=department_in.environmental_score,
+        social_score=department_in.social_score,
+        governance_score=department_in.governance_score,
+        employee_count=department_in.employee_count,
+        total_esg_score=total
     )
     db.add(db_obj)
     db.commit()
