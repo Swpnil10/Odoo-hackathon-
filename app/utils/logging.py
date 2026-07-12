@@ -1,0 +1,16 @@
+import logging
+import sys
+
+def setup_logging() -> None:
+    """Configures centralized logging for the application."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s - %(filename)s:%(lineno)d - %(message)s",
+        handlers=[
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
+
+# Expose a package-level logger
+logger = logging.getLogger("ecosphere")
+logger.setLevel(logging.INFO)
