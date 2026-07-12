@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Outfit', sans-serif;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: #05070f;
+  color: #f8fafc;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glassmorphism custom classes */
+.glass-panel {
+  background: rgba(11, 15, 30, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-panel-hover:hover {
+  background: rgba(20, 28, 54, 0.6);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transform: translateY(-2px);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(5, 7, 15, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Glowing text effects */
+.text-glow-env {
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+.text-glow-social {
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+}
+.text-glow-gov {
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+/* Shimmer animation for loading states */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Custom styling for Recharts Tooltips to fit the premium theme */
+.recharts-default-tooltip {
+  background-color: rgba(11, 15, 30, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ===== Terrarium Weather Animations ===== */
+
+/* Rain drops falling inside dome */
+@keyframes rain-fall {
+  0% { transform: translateY(-20px); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(200px); opacity: 0; }
+}
+.animate-rain-1 { animation: rain-fall 1.2s linear infinite; }
+.animate-rain-2 { animation: rain-fall 1.5s linear infinite 0.3s; }
+.animate-rain-3 { animation: rain-fall 1.0s linear infinite 0.6s; }
+.animate-rain-4 { animation: rain-fall 1.8s linear infinite 0.2s; }
+.animate-rain-5 { animation: rain-fall 1.3s linear infinite 0.8s; }
+.animate-rain-6 { animation: rain-fall 1.6s linear infinite 0.5s; }
+
+/* Pollen particles drifting sideways */
+@keyframes pollen-drift {
+  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+  20% { opacity: 0.9; }
+  50% { transform: translate(15px, -10px) scale(1.2); opacity: 0.7; }
+  80% { opacity: 0.5; }
+  100% { transform: translate(30px, 5px) scale(0.8); opacity: 0; }
+}
+.animate-pollen-1 { animation: pollen-drift 4s ease-in-out infinite; }
+.animate-pollen-2 { animation: pollen-drift 5s ease-in-out infinite 1s; }
+.animate-pollen-3 { animation: pollen-drift 3.5s ease-in-out infinite 2s; }
+.animate-pollen-4 { animation: pollen-drift 4.5s ease-in-out infinite 0.5s; }
+.animate-pollen-5 { animation: pollen-drift 3.8s ease-in-out infinite 1.5s; }
+
+/* Firefly glow for night mode */
+@keyframes firefly-glow {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.4); }
+}
+.animate-firefly-1 { animation: firefly-glow 2s ease-in-out infinite; }
+.animate-firefly-2 { animation: firefly-glow 3s ease-in-out infinite 0.8s; }
+.animate-firefly-3 { animation: firefly-glow 2.5s ease-in-out infinite 1.5s; }
+.animate-firefly-4 { animation: firefly-glow 1.8s ease-in-out infinite 0.4s; }
