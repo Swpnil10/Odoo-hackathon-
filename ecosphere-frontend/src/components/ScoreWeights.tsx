@@ -63,8 +63,8 @@ export const ScoreWeights: React.FC<ScoreWeightsProps> = ({ departments }) => {
       try {
         const data = await api.getCarbonForecast(parseInt(selectedDept.id));
         setForecast({
-          forecasted_carbon_amount: data.forecasted_carbon_amount,
-          trend: data.trend
+          forecasted_carbon_amount: data?.forecasted_carbon_amount ?? 0.0,
+          trend: data?.trend ?? 'stable'
         });
       } catch (err: any) {
         setForecastError(err.message || 'Failed to fetch carbon emissions forecast.');
@@ -78,6 +78,18 @@ export const ScoreWeights: React.FC<ScoreWeightsProps> = ({ departments }) => {
 
   const [isLocked, setIsLocked] = useState(true);
   const [weightByEmployees, setWeightByEmployees] = useState(false);
+
+  if (!departments || departments.length === 0) {
+    return (
+      <div className="p-8 rounded-2xl border border-slate-800 bg-slate-900 shadow-xl text-center flex flex-col items-center justify-center min-h-[300px]">
+        <Scale className="w-12 h-12 text-slate-600 mb-4 animate-bounce" />
+        <h3 className="text-base font-bold text-slate-200">No Department Scorecard Data Available</h3>
+        <p className="text-xs text-slate-500 mt-2 max-w-sm leading-relaxed">
+          The application was unable to retrieve department details from the database. Please verify the backend service is running and seed data is populated.
+        </p>
+      </div>
+    );
+  }
 
   // Proportional weight balancing algorithm to ensure sum is always 100%
   const handleWeightChange = (category: keyof ESGWeightConfig, value: number) => {
